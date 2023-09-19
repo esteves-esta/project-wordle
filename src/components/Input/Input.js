@@ -18,6 +18,7 @@ function Input({ addGuessToList, reachedEnd }) {
         value={guess}
         onChange={(event) => setGuess(event.target.value)}
         disabled={reachedEnd}
+        title="5 letter word" // title shows on validation
       />
     </form>
   );
