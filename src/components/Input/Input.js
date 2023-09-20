@@ -12,6 +12,8 @@ function Input({ addGuessToList, reachedEnd }) {
     <form onSubmit={handleSubmit} className="guess-input-wrapper">
       <label htmlFor="guess-input">Enter guess:</label>
       <input
+        style={{ textTransform: 'uppercase' }}
+        required={true}
         id="guess-input"
         type="text"
         pattern="[A-Za-z]{5}"
