@@ -18,8 +18,6 @@ function Game() {
   const [list, setList] = React.useState([])
   const [gameStatus, setGameStatus] = React.useState('running')
 
-  const [letterGuessed, setLetterGuessed] = React.useState([])
-
   function addGuessToList(guess) {
     const nextList = [...list, guess]
     setList(nextList)
@@ -30,29 +28,18 @@ function Game() {
       setGameStatus('lost')
     }
 
-    saveLettersGuessed(checkGuess(guess, answer))
   }
 
-  function saveLettersGuessed(guessLetters) {
-    const newGuesses = [...letterGuessed];
-    guessLetters.forEach(item => {
-      const index = newGuesses.findIndex(guessed => guessed.letter === item.letter);
-      if (index < 0) {
-        newGuesses.push({ ...item })
-      } else if (item.status === 'correct') {
-        newGuesses[index].status = item.status
-      }
-    })
-
-    setLetterGuessed(newGuesses)
-  }
+  const validatedGuesses = list.map((guess) =>
+    checkGuess(guess, answer)
+  );
 
   return (<>
     <GuessResults list={list} answer={answer} />
 
     <Input addGuessToList={addGuessToList} gameStatus={gameStatus} />
 
-    <Keyboard letterGuessed={letterGuessed} />
+    <Keyboard validatedGuesses={validatedGuesses} />
 
     {gameStatus === 'won' && (
       <WonBanner numOfGuesses={list.length} />

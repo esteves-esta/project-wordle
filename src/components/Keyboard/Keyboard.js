@@ -1,16 +1,35 @@
 import React from 'react';
 import KeyboardRow from './KeyboardRow';
 
-function Keyboard({ letterGuessed }) {
-  const firstRow = ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'];
-  const secondRow = ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L',]
-  const thirdRow = ['Z', 'X', 'C', 'V', 'B', 'N', 'M']
+const ROWS = [
+  ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+  ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L',],
+  ['Z', 'X', 'C', 'V', 'B', 'N', 'M'],];
 
-  return <div>
-    <KeyboardRow row={firstRow} letterGuessed={letterGuessed} />
-    <KeyboardRow row={secondRow} letterGuessed={letterGuessed} />
-    <KeyboardRow row={thirdRow} letterGuessed={letterGuessed}  />
-  </div >;
+function getStatusByLetter(validatedGuesses) {
+  const statusObj = {};
+
+  validatedGuesses.forEach((guess) => {
+    guess.forEach(({ letter, status }) => {
+      statusObj[letter] = status;
+    });
+  });
+
+  return statusObj;
+}
+
+function Keyboard({ validatedGuesses }) {
+  let statusByLetter = getStatusByLetter(validatedGuesses);
+
+  return (
+    <div className="keyboard">
+      {ROWS.map((row, index) => (
+        <div className="row" key={index}>
+          <KeyboardRow row={row} statusByLetter={statusByLetter} />
+        </div>
+      ))}
+    </div>
+  )
 }
 
 export default Keyboard;
