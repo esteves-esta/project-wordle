@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Input({ addGuessToList, reachedEnd }) {
+function Input({ addGuessToList, gameStatus }) {
   const [guess, setGuess] = React.useState('');
 
   function handleSubmit(event) {
@@ -19,7 +19,7 @@ function Input({ addGuessToList, reachedEnd }) {
         pattern="[A-Za-z]{5}"
         value={guess}
         onChange={(event) => setGuess(event.target.value)}
-        disabled={reachedEnd}
+        disabled={gameStatus !== 'running'}
         title="5 letter word" // title shows on validation
       />
     </form>

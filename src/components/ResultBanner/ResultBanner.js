@@ -1,14 +1,19 @@
 import React from 'react';
 
-function ResultBanner({ success, answer, guessesQty }) {
-  const className = success ? 'happy banner' : 'sad banner'
+function ResultBanner({ gameStatus, answer, guessesQty }) {
+  const className = gameStatus === 'won' ? 'happy banner' : 'sad banner'
   return <div className={className}>
-    {success && <p>
+    {gameStatus === 'won' && <p>
       <strong>Congratulations!</strong>
       {' '}Got it in{' '}
-      <strong>{guessesQty} guesses</strong>.
+      <strong>
+        {guessesQty === 1 ? '1 guess' : `${guessesQty} guesses`}
+      </strong>.
     </p>}
-    {!success && <p>Sorry, the correct answer is <strong>{answer}</strong>.</p>}
+
+    {gameStatus === 'lost' && (
+      <p>Sorry, the correct answer is <strong>{answer}</strong>.</p>
+    )}
   </div>;
 }
 

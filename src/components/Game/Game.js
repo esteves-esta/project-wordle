@@ -5,8 +5,9 @@ import { WORDS } from '../../data';
 import Input from '../Input'
 import GuessResults from '../GuessResults'
 import { checkGuess } from '../../game-helpers';
-import ResultBanner from '../ResultBanner';
 import Keyboard from '../Keyboard';
+import WonBanner from '../WonBanner';
+import LostBanner from '../LostBanner';
 
 // Pick a random word on every pageload.
 const answer = sample(WORDS);
@@ -15,16 +16,21 @@ console.info({ answer });
 
 function Game() {
   const [list, setList] = React.useState([])
-  const [success, setSuccess] = React.useState(false)
-  const [reachedEnd, setReachedEnd] = React.useState(false)
+  const [gameStatus, setGameStatus] = React.useState('running')
 
   const [letterGuessed, setLetterGuessed] = React.useState([])
 
   function addGuessToList(guess) {
-    setList([...list, guess])
+    const nextList = [...list, guess]
+    setList(nextList)
+
+    if (guess === answer) {
+      setGameStatus('won')
+    } else if (nextList.length === NUM_OF_GUESSES_ALLOWED) {
+      setGameStatus('lost')
+    }
 
     saveLettersGuessed(checkGuess(guess, answer))
-    checkIfGameEnded(guess)
   }
 
   function saveLettersGuessed(guessLetters) {
@@ -32,7 +38,7 @@ function Game() {
     guessLetters.forEach(item => {
       const index = newGuesses.findIndex(guessed => guessed.letter === item.letter);
       if (index < 0) {
-        newGuesses.push({...item})
+        newGuesses.push({ ...item })
       } else if (item.status === 'correct') {
         newGuesses[index].status = item.status
       }
@@ -41,19 +47,20 @@ function Game() {
     setLetterGuessed(newGuesses)
   }
 
-  function checkIfGameEnded(guess) {
-    setSuccess(answer === guess)
-    setReachedEnd(list.length === NUM_OF_GUESSES_ALLOWED - 1)
-  }
-
   return (<>
     <GuessResults list={list} answer={answer} />
 
-    <Input addGuessToList={addGuessToList} reachedEnd={success || reachedEnd} />
+    <Input addGuessToList={addGuessToList} gameStatus={gameStatus} />
 
     <Keyboard letterGuessed={letterGuessed} />
 
-    {(success || reachedEnd) && <ResultBanner success={success} answer={answer} guessesQty={list.length} />}
+    {gameStatus === 'won' && (
+      <WonBanner numOfGuesses={list.length} />
+    )}
+
+    {gameStatus === 'lost' && (
+      <LostBanner answer={answer} />
+    )}
   </>);
 }
 
