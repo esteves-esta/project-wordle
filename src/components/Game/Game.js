@@ -17,7 +17,7 @@ function Game() {
   const [list, setList] = React.useState([])
   const [success, setSuccess] = React.useState(false)
   const [reachedEnd, setReachedEnd] = React.useState(false)
-  const [qtyOfGuessesMade, setQtyOfGuessesMade] = React.useState(0)
+
   const [letterGuessed, setLetterGuessed] = React.useState([])
 
   function addGuessToList(guess) {
@@ -43,9 +43,7 @@ function Game() {
 
   function checkIfGameEnded(guess) {
     setSuccess(answer === guess)
-    setReachedEnd(qtyOfGuessesMade === NUM_OF_GUESSES_ALLOWED)
-    setQtyOfGuessesMade(qtyOfGuessesMade + 1)
-
+    setReachedEnd(list.length === NUM_OF_GUESSES_ALLOWED - 1)
   }
 
   return (<>
@@ -55,7 +53,7 @@ function Game() {
 
     <Keyboard letterGuessed={letterGuessed} />
 
-    {(success || reachedEnd) && <ResultBanner success={success} answer={answer} guessesQty={qtyOfGuessesMade} />}
+    {(success || reachedEnd) && <ResultBanner success={success} answer={answer} guessesQty={list.length} />}
   </>);
 }
 
