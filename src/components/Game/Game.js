@@ -14,27 +14,16 @@ const answer = sample(WORDS);
 console.info({ answer });
 
 function Game() {
-
-  const initialValue = []
-  for (let i = 0; i < NUM_OF_GUESSES_ALLOWED; i++) {
-    initialValue.push({ id: crypto.randomUUID(), guess: '', status: [] })
-  }
-
-  const [list, setList] = React.useState(initialValue)
+  const [list, setList] = React.useState([])
   const [success, setSuccess] = React.useState(false)
   const [reachedEnd, setReachedEnd] = React.useState(false)
   const [qtyOfGuessesMade, setQtyOfGuessesMade] = React.useState(0)
   const [letterGuessed, setLetterGuessed] = React.useState([])
 
   function addGuessToList(guess) {
-    const nextList = [...list];
-    const emptyGuess = list.findIndex(item => item.guess === '')
-    nextList[emptyGuess].guess = guess
-    nextList[emptyGuess].status = checkGuess(guess, answer)
+    setList([...list, guess])
 
-    setList(nextList)
-
-    saveLettersGuessed(nextList[emptyGuess].status)
+    saveLettersGuessed(checkGuess(guess, answer))
     checkIfGameEnded(guess)
   }
 
@@ -60,7 +49,7 @@ function Game() {
   }
 
   return (<>
-    <GuessResults list={list} />
+    <GuessResults list={list} answer={answer} />
 
     <Input addGuessToList={addGuessToList} reachedEnd={success || reachedEnd} />
 

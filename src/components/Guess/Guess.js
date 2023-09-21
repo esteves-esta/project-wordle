@@ -1,21 +1,24 @@
 import React from 'react';
 
+import { checkGuess } from '../../game-helpers';
 import { range } from '../../utils';
 
-function Guess({ item: { guess, status, id } }) {
+function Guess({ value, answer }) {
+  const result = checkGuess(value, answer);
+
   function getClassName(index) {
-    return status.length > 0 ? status[index].status : ''
+    return value ? `cell ${result[index].status}` : 'cell'
   }
 
   function getLetter(index) {
-    return status.length > 0 ? status[index].letter : ''
+    return value ? value[index] : null
   }
 
   return <>
-    {range(0, 5).map(index =>
+    {range(5).map(index =>
       <span
-        key={`${id}${index}`}
-        className={`cell ${getClassName(index)}`}
+        key={index}
+        className={getClassName(index)}
       >
         {getLetter(index)}
       </span>
@@ -23,5 +26,4 @@ function Guess({ item: { guess, status, id } }) {
   </>;
 }
 
-// className={`cell ${item.guess.status.length > 0 && item.guess.status[index]}`}
 export default Guess;
